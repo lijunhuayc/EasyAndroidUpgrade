@@ -197,14 +197,15 @@ public class MiExToast implements View.OnTouchListener {
 //            params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
 //                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
             params.flags = WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
-                    | WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                    | WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                    | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 
-            /**设置动画*/
             if (animations != -1) {
                 params.windowAnimations = animations;
             }
 
-            /**调用tn.show()之前一定要先设置mNextView*/
+            //调用tn.show()之前一定要先设置 mNextView
             Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
             tnNextViewField.setAccessible(true);
             tnNextViewField.set(mTN, toast.getView());
@@ -216,11 +217,11 @@ public class MiExToast implements View.OnTouchListener {
         setGravity(Gravity.CENTER | Gravity.TOP, 0, 0);
     }
 
-    private void updateViewPosition() {
-        //更新浮动窗口位置参数
+    private void refreshViewPosition() {
         params.x = (int) (x - mTouchStartX);
         params.y = (int) (y - mTouchStartY);
         mWM.updateViewLayout(toast.getView(), params);  //刷新显示
+        Log.d(TAG, "refresh ui finish...");
     }
 
     @Override
@@ -237,10 +238,8 @@ public class MiExToast implements View.OnTouchListener {
                 Log.i("startP", "startX" + mTouchStartX + "====startY" + mTouchStartY);
                 break;
             case MotionEvent.ACTION_MOVE:   //捕获手指触摸移动动作
-//                updateViewPosition();
                 break;
             case MotionEvent.ACTION_UP:    //捕获手指触摸离开动作
-//                updateViewPosition();
                 hide();
                 break;
         }
