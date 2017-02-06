@@ -1,4 +1,4 @@
-package com.lijunhuayc.sample;
+package com.lijunhuayc.upgrade.view;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,8 +8,12 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.lijunhuayc.upgrade.R;
+import com.lijunhuayc.upgrade.utils.MyToast;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -28,7 +32,6 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
 
     private Toast toast;
     private Context mContext;
-    private CharSequence mText;
     private int mDuration = LENGTH_SHORT;
     private int animations = -1;
     private boolean isShow = false;
@@ -36,16 +39,15 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
     private Object mTN;
     private Method show;
     private Method hide;
-    //    private WindowManager mWM;
-    private WindowManager.LayoutParams params;
     private View mView;
+    private LinearLayout visualLayout;//dialog content layout
+    private CharSequence mText;
 
     private Handler handler = new Handler();
 
     public static EasyToastDialog makeText(Context context, CharSequence text, int duration) {
-        Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
         EasyToastDialog exToast = new EasyToastDialog(context);
-        exToast.toast = toast;
+        exToast.setText(text);
         exToast.mDuration = duration;
         return exToast;
     }
@@ -62,6 +64,7 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
         mView = View.inflate(mContext, R.layout.easy_dialog_layout, null);
         mView.setOnTouchListener(this);
         mView.setOnKeyListener(this);
+        visualLayout = (LinearLayout) mView.findViewById(R.id.visualLayout);
     }
 
     private Runnable hideRunnable = new Runnable() {
@@ -73,9 +76,21 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
 
     public void show() {
         if (isShow) return;
-        TextView tv = (TextView) mView.findViewById(R.id.expandable_text);
-        tv.setText(mText);
+        TextView messageTV = (TextView) mView.findViewById(R.id.messageTV);
+        messageTV.setText(mText);
         toast.setView(mView);
+        mView.findViewById(R.id.mButtonPositive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyToast.showToast("点击升级");
+            }
+        });
+        mView.findViewById(R.id.mButtonNegative).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyToast.showToast("点击取消");
+            }
+        });
         initTN();
         try {
             show.invoke(mTN);
@@ -91,6 +106,8 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
     public void hide() {
         if (!isShow) return;
         try {
+            mText = null;
+            mView = null;
             hide.invoke(mTN);
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,7 +191,7 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
 
             Field tnParamsField = mTN.getClass().getDeclaredField("mParams");
             tnParamsField.setAccessible(true);
-            params = (WindowManager.LayoutParams) tnParamsField.get(mTN);
+            WindowManager.LayoutParams params = (WindowManager.LayoutParams) tnParamsField.get(mTN);
             params.width = WindowManager.LayoutParams.MATCH_PARENT;
             params.height = WindowManager.LayoutParams.MATCH_PARENT;
 //            params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
@@ -203,7 +220,24 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
             case MotionEvent.ACTION_DOWN:
                 break;
             case MotionEvent.ACTION_UP:
-                hide();
+//                LogUtils.d(TAG, "eventx = " + event.getX());
+//                LogUtils.d(TAG, "eventy = " + event.getY());
+//                LogUtils.d(TAG, "xl = " + visualLayout.getX());
+//                LogUtils.d(TAG, "yt = " + visualLayout.getY());
+//                LogUtils.d(TAG, "xr = " + (visualLayout.getX() + visualLayout.getWidth()));
+//                LogUtils.d(TAG, "yb = " + (visualLayout.getY() + visualLayout.getHeight()));
+                float eventX = event.getX();
+                float eventY = event.getY();
+                float visualL = visualLayout.getX();
+                float visualR = visualL + visualLayout.getWidth();
+                float visualT = visualLayout.getY();
+                float visualB = visualT + visualLayout.getHeight();
+                if (!(eventX > visualL
+                        && eventX < visualR
+                        && eventY > visualT
+                        && eventY < visualB)) {
+                    hide();
+                }
                 break;
         }
         return true;

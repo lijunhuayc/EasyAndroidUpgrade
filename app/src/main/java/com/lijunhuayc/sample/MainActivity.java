@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lijunhuayc.upgrade.UpgradeHelper;
+import com.lijunhuayc.upgrade.view.EasyToastDialog;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private EditText downloadpathText;
@@ -46,7 +47,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         new Handler(getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级\n", EasyToastDialog.LENGTH_ALWAYS).show();
+                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级", EasyToastDialog.LENGTH_ALWAYS).show();
 //                startActivity(new Intent(MainActivity.this, SecondActivity.class));
             }
         }, 1000);
@@ -115,11 +116,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (view.getId()) {
             case R.id.startBt:
                 startDownload();
-
-
                 ///
-
-                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级\n", EasyToastDialog.LENGTH_ALWAYS).show();
+                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级", EasyToastDialog.LENGTH_ALWAYS).show();
 
                 break;
             case R.id.pauseBt:
