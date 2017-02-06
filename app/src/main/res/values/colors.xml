@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="colorPrimary">#09152F</color>
+    <color name="colorPrimary80">#CC09152F</color>
+    <color name="colorPrimaryDark">#071025</color>
+    <color name="colorAccent">#376065</color>
+    <color name="colorStatus">#33000000</color>
+    <color name="textColorPrimary">#525B6D</color>
+
+
+<!--
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+-->
 
     <color name="common_pressed">#FF5aFa</color>
     <color name="common_normal">#AfFa3a</color>

@@ -3,9 +3,8 @@ package com.lijunhuayc.sample;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,9 +19,8 @@ import java.lang.reflect.Method;
  * Created by ${junhua.li} on 2016/11/02 15:32.
  * Email: lijunhuayc@sina.com
  */
-public class MiExToast implements View.OnTouchListener {
-
-    private static final String TAG = "ExToast";
+public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener {
+    private static final String TAG = EasyToastDialog.class.getSimpleName();
 
     public static final int LENGTH_ALWAYS = 0;
     public static final int LENGTH_SHORT = 2;
@@ -30,6 +28,7 @@ public class MiExToast implements View.OnTouchListener {
 
     private Toast toast;
     private Context mContext;
+    private CharSequence mText;
     private int mDuration = LENGTH_SHORT;
     private int animations = -1;
     private boolean isShow = false;
@@ -37,25 +36,32 @@ public class MiExToast implements View.OnTouchListener {
     private Object mTN;
     private Method show;
     private Method hide;
-    private WindowManager mWM;
+    //    private WindowManager mWM;
     private WindowManager.LayoutParams params;
     private View mView;
 
-    private float mTouchStartX;
-    private float mTouchStartY;
-    private float x;
-    private float y;
-
     private Handler handler = new Handler();
 
-    public MiExToast(Context context) {
+    public static EasyToastDialog makeText(Context context, CharSequence text, int duration) {
+        Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+        EasyToastDialog exToast = new EasyToastDialog(context);
+        exToast.toast = toast;
+        exToast.mDuration = duration;
+        return exToast;
+    }
+
+    public static EasyToastDialog makeText(Context context, int resId, int duration) throws Resources.NotFoundException {
+        return makeText(context, context.getResources().getText(resId), duration);
+    }
+
+    private EasyToastDialog(Context context) {
         this.mContext = context;
         if (toast == null) {
             toast = new Toast(mContext);
         }
-        LayoutInflater inflate = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mView = inflate.inflate(R.layout.activity_locked_alert_layout, null);
+        mView = View.inflate(mContext, R.layout.easy_dialog_layout, null);
         mView.setOnTouchListener(this);
+        mView.setOnKeyListener(this);
     }
 
     private Runnable hideRunnable = new Runnable() {
@@ -65,13 +71,10 @@ public class MiExToast implements View.OnTouchListener {
         }
     };
 
-    /**
-     * Show the view for the specified duration.
-     */
     public void show() {
         if (isShow) return;
         TextView tv = (TextView) mView.findViewById(R.id.expandable_text);
-        tv.setText("悬浮窗");
+        tv.setText(mText);
         toast.setView(mView);
         initTN();
         try {
@@ -80,17 +83,11 @@ public class MiExToast implements View.OnTouchListener {
             e.printStackTrace();
         }
         isShow = true;
-        //判断duration，如果大于#LENGTH_ALWAYS 则设置消失时间
         if (mDuration > LENGTH_ALWAYS) {
             handler.postDelayed(hideRunnable, mDuration * 1000);
         }
     }
 
-    /**
-     * Close the view if it's showing, or don't show it if it isn't showing yet.
-     * You do not normally have to call this.  Normally view will disappear on its own
-     * after the appropriate duration.
-     */
     public void hide() {
         if (!isShow) return;
         try {
@@ -110,8 +107,6 @@ public class MiExToast implements View.OnTouchListener {
     }
 
     /**
-     * Set how long to show the view for.
-     *
      * @see #LENGTH_SHORT
      * @see #LENGTH_LONG
      * @see #LENGTH_ALWAYS
@@ -152,25 +147,13 @@ public class MiExToast implements View.OnTouchListener {
         return toast.getYOffset();
     }
 
-    public static MiExToast makeText(Context context, CharSequence text, int duration) {
-        Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-        MiExToast exToast = new MiExToast(context);
-        exToast.toast = toast;
-        exToast.mDuration = duration;
-        return exToast;
-    }
-
-    public static MiExToast makeText(Context context, int resId, int duration)
-            throws Resources.NotFoundException {
-        return makeText(context, context.getResources().getText(resId), duration);
-    }
-
     public void setText(int resId) {
         setText(mContext.getText(resId));
     }
 
-    public void setText(CharSequence s) {
-        toast.setText(s);
+    public void setText(CharSequence textStr) {
+//        toast.setText(s);
+        this.mText = textStr;
     }
 
     public int getAnimations() {
@@ -197,9 +180,7 @@ public class MiExToast implements View.OnTouchListener {
 //            params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
 //                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
             params.flags = WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
-                    | WindowManager.LayoutParams.FLAG_FULLSCREEN
-                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                    | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+                    | WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
             if (animations != -1) {
                 params.windowAnimations = animations;
@@ -209,41 +190,39 @@ public class MiExToast implements View.OnTouchListener {
             Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
             tnNextViewField.setAccessible(true);
             tnNextViewField.set(mTN, toast.getView());
-
-            mWM = (WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+//            mWM = (WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         } catch (Exception e) {
             e.printStackTrace();
         }
         setGravity(Gravity.CENTER | Gravity.TOP, 0, 0);
     }
 
-    private void refreshViewPosition() {
-        params.x = (int) (x - mTouchStartX);
-        params.y = (int) (y - mTouchStartY);
-        mWM.updateViewLayout(toast.getView(), params);  //刷新显示
-        Log.d(TAG, "refresh ui finish...");
-    }
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        //获取相对屏幕的坐标，即以屏幕左上角为原点
-        x = event.getRawX();
-        y = event.getRawY();
-        Log.i("currP", "currX" + x + "====currY" + y);
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:    //捕获手指触摸按下动作
-                //获取相对View的坐标，即以此View左上角为原点
-                mTouchStartX = event.getX();
-                mTouchStartY = event.getY();
-                Log.i("startP", "startX" + mTouchStartX + "====startY" + mTouchStartY);
+            case MotionEvent.ACTION_DOWN:
                 break;
-            case MotionEvent.ACTION_MOVE:   //捕获手指触摸移动动作
-                break;
-            case MotionEvent.ACTION_UP:    //捕获手指触摸离开动作
+            case MotionEvent.ACTION_UP:
                 hide();
                 break;
         }
         return true;
+//        return false;
     }
 
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+//        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//            hide();
+//            return true;
+//        }
+//        switch (event.getAction()) {
+//            case KeyEvent.ACTION_DOWN:
+//                break;
+//            case KeyEvent.ACTION_UP:
+//                hide();
+//                break;
+//        }
+        return false;
+    }
 }

@@ -29,18 +29,22 @@
         android:id="@+id/pauseBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/common_item_drawable"
         android:text="暂停" />
 
     <Button
         android:id="@+id/continueBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:text="继续" />
 
     <Button
         android:id="@+id/stopBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:text="停止" />
 
     <!-- 进度条 -->

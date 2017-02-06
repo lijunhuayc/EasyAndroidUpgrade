@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -47,25 +46,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         new Handler(getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                MiExToast.makeText(MainActivity.this, "特使Toast", MiExToast.LENGTH_ALWAYS).show();
+                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级\n", EasyToastDialog.LENGTH_ALWAYS).show();
 //                startActivity(new Intent(MainActivity.this, SecondActivity.class));
             }
-        }, 2000);
+        }, 1000);
 
     }
 
     private void init() {
-        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
-//            int permission = checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW);
-//            if (permission == PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(this, "未授权", Toast.LENGTH_SHORT).show();
-////                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW}, 123);
-//                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SYSTEM_ALERT_WINDOW);
-//                return;
-//            }
-        }
         showTestView();
-        WindowUtils.showPopupWindow(this);
+//        WindowUtils.showPopupWindow(this);
 
     }
 
@@ -125,6 +115,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (view.getId()) {
             case R.id.startBt:
                 startDownload();
+
+
+                ///
+
+                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级\n", EasyToastDialog.LENGTH_ALWAYS).show();
+
                 break;
             case R.id.pauseBt:
                 break;

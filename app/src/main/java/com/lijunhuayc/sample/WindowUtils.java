@@ -96,7 +96,7 @@ public class WindowUtils {
     }
 
     private static View setUpView(final Context context) {
-        View view = LayoutInflater.from(context).inflate(R.layout.activity_locked_alert_layout, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.easy_dialog_layout, null);
         view.setBackgroundColor(Color.parseColor("#77000000"));
         alertTitleTV = ((TextView) view.findViewById(R.id.alertTitle));
         Button positiveBtn = (Button) view.findViewById(R.id.mButtonPositive);
@@ -124,7 +124,7 @@ public class WindowUtils {
         // 点击窗口外部区域可消除
         // 这点的实现主要将悬浮窗设置为全屏大小，外层有个透明背景，中间一部分视为内容区域
         // 所以点击内容区域外部视为点击悬浮窗外部
-        final View parentPanel = view.findViewById(R.id.realLayout);// 非透明的内容区域
+        final View parentPanel = view.findViewById(R.id.rootLayout);// 非透明的内容区域
         view.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
