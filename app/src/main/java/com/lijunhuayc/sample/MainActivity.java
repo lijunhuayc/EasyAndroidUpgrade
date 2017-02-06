@@ -3,9 +3,7 @@ package com.lijunhuayc.sample;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Process;
 import android.support.annotation.NonNull;
@@ -15,10 +13,8 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lijunhuayc.upgrade.UpgradeHelper;
-import com.lijunhuayc.upgrade.view.EasyToastDialog;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private EditText downloadpathText;
@@ -32,48 +28,52 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.main);
         context = this;
 
-        downloadpathText = (EditText) this.findViewById(R.id.path);
+        downloadpathText = (EditText) this.findViewById(R.id.path);//仅仅测试下载用的APK(使用者无需关注)
         downloadpathText.setText("http://221.236.21.155/imtt.dd.qq.com/16891/5C119BDFA17906E5D6F45BDF932460BB.apk?mkey=57d63b47fb8efb5e&f=3580&c=0&fsname=com.shangyi.postop.paitent.android_4.2.0.0_18.apk&hsr=4d5s&p=.apk");
 //        downloadpathText.setText("https://dl.google.com/dl/android/studio/install/2.2.0.12/android-studio-ide-145.3276617-windows.exe");
         progressBar = (ProgressBar) this.findViewById(R.id.downloadbar);
         resultView = (TextView) this.findViewById(R.id.resultView);
-
         findViewById(R.id.startBt).setOnClickListener(this);
         findViewById(R.id.pauseBt).setOnClickListener(this);
         findViewById(R.id.continueBt).setOnClickListener(this);
         findViewById(R.id.stopBt).setOnClickListener(this);
 
-        init();
         new Handler(getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级", EasyToastDialog.LENGTH_ALWAYS).show();
+//                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级", EasyToastDialog.LENGTH_ALWAYS).show();
 //                startActivity(new Intent(MainActivity.this, SecondActivity.class));
             }
-        }, 1000);
+        }, 200);
+        //        String path = downloadpathText.getText().toString();
+
+        init();//使用者只需关注此方法中的代码
 
     }
 
     private void init() {
-        showTestView();
-//        WindowUtils.showPopupWindow(this);
-
+        new UpgradeHelper.Builder(this)
+                .setUpgradeUrl("http://192.168.1.79/public/upgrade.html?version=3")
+                .setDelay(3000)
+                .build().check();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 123) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                showTestView();
-            } else {
-                Toast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT).show();
-            }
-        }
+//        if (requestCode == 123) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                showTestView();
+//            } else {
+//                Toast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT).show();
+//            }
+//        }
     }
 
+    /**
+     * test
+     */
     private void showTestView() {
-
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("升级提醒");
         alertDialog.setMessage("消息消息");
@@ -115,10 +115,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.startBt:
-                startDownload();
-                ///
-                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级", EasyToastDialog.LENGTH_ALWAYS).show();
-
+//                EasyToastDialog.makeText(MainActivity.this, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级", EasyToastDialog.LENGTH_ALWAYS).show();
                 break;
             case R.id.pauseBt:
                 break;
@@ -127,15 +124,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.stopBt:
                 break;
         }
-    }
-
-    private void startDownload() {
-        String path = downloadpathText.getText().toString();
-        System.out.println(Environment.getExternalStorageState() + "------" + Environment.MEDIA_MOUNTED);
-
-
-        new UpgradeHelper.Builder(this);
-
     }
 
     @Override

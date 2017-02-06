@@ -40,7 +40,7 @@ public class UpgradeHelper {
     private long delay;
     private LocalAppInfo localAppInfo;
 
-    public UpgradeHelper(Builder builder) {
+    private UpgradeHelper(Builder builder) {
         this.mContext = builder.mContext;
         this.upgradeUrl = builder.upgradeUrl;
         this.isAutoStartInstall = builder.isAutoStartInstall;
@@ -56,12 +56,14 @@ public class UpgradeHelper {
         new CheckAsyncTask().execute(upgradeUrl);
     }
 
-    class CheckAsyncTask extends AsyncTask<String, Integer, UpgradeInfoResult> {
+    private class CheckAsyncTask extends AsyncTask<String, Integer, UpgradeInfoResult> {
 
         @Override
         protected UpgradeInfoResult doInBackground(String... params) {
             try {
-                if (delay > 0) Thread.sleep(delay);
+                if (delay > 0) {
+                    Thread.sleep(delay);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -96,12 +98,12 @@ public class UpgradeHelper {
     }
 
     private void showUpgradeAlertDialog(final UpgradeInfoModel upgradeInfoModel) {
-        switch (upgradeInfoModel.getIsForce()){
+        switch (upgradeInfoModel.getIsForce()) {
             case NOT_FORCE:
-                if(isQuietDownload){
+                if (isQuietDownload) {
                     //not force upgrade & is quiet download.
                     startDownload(upgradeInfoModel, true);
-                }else {
+                } else {
 
                 }
                 break;
@@ -113,6 +115,8 @@ public class UpgradeHelper {
                 break;
 
         }
+
+        //todo...
         AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
         if (TextUtils.isEmpty(upgradeInfoModel.getUpgradeTitle())) {
             alertDialog.setTitle("升级提醒");
@@ -210,7 +214,7 @@ public class UpgradeHelper {
         private String upgradeUrl;                      //upgrade check remote-interface.
         private boolean isAutoStartInstall = false;
         private boolean isQuietDownload = false;        //whether quiet download when the update is detected.
-        private boolean isCheckPackageName = false;     //whether check the package name.
+        private boolean isCheckPackageName = true;     //whether check the package name.
         private long delay = 0;                          //millisecond. whether delay check upgrade.
 
         public Builder(Context mContext) {

@@ -23,7 +23,8 @@
         android:layout_height="50dp"
         android:background="@drawable/common_item_drawable"
         android:gravity="center"
-        android:text="开始" />
+        android:text="开始"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/pauseBt"
@@ -31,21 +32,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:background="@drawable/common_item_drawable"
-        android:text="暂停" />
+        android:text="暂停"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/continueBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="继续" />
+        android:text="继续"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/stopBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="停止" />
+        android:text="停止"
+        android:visibility="gone" />
 
     <!-- 进度条 -->
     <ProgressBar

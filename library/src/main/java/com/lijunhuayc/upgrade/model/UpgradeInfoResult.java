@@ -2,6 +2,17 @@ package com.lijunhuayc.upgrade.model;
 
 /**
  * Desc:
+ * {
+ * "status": 1,
+ * "data": {
+ * "appName": xxx,
+ * "versionCode": 2,
+ * "versionName": 1.0.2,
+ * ...
+ * },
+ * "message": "desc...",
+ * ...
+ * }
  * Created by ${junhua.li} on 2016/10/31 18:00.
  * Email: lijunhuayc@sina.com
  */
