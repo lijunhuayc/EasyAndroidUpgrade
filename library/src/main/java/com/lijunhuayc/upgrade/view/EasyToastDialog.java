@@ -1,14 +1,13 @@
 package com.lijunhuayc.upgrade.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +22,7 @@ import java.lang.reflect.Method;
  * Created by ${junhua.li} on 2016/11/02 15:32.
  * Email: lijunhuayc@sina.com
  */
-public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener {
+public class EasyToastDialog implements View.OnTouchListener {
     private static final String TAG = EasyToastDialog.class.getSimpleName();
 
     public static final int LENGTH_ALWAYS = 0;
@@ -35,38 +34,30 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
     private int mDuration = LENGTH_SHORT;
     private int animations = -1;
     private boolean isShow = false;
+    private boolean isCancelable = false;
+    private boolean isCanceledOnTouchOutside = false;
 
     private Object mTN;
     private Method show;
     private Method hide;
     private View mView;
     private LinearLayout visualLayout;//dialog content layout
-    private CharSequence mText;
+    private TextView titleTV;
+    private CharSequence mTitleText;
+    private TextView messageTV;
+    private CharSequence mMessageText;
+    private ProgressBar progressBar;
+    private TextView mButtonPositive;
+    private CharSequence mPositiveText;
+    private View.OnClickListener positiveListener;
+    private TextView mButtonNegative;
+    private CharSequence mNegativeText;
+    private View.OnClickListener negativeListener;
+    private TextView mButtonNeutral;
+    private CharSequence mNeutralText;
+    private View.OnClickListener neutralListener;
 
     private Handler handler = new Handler();
-
-    public static EasyToastDialog makeText(Context context, CharSequence text, int duration) {
-        EasyToastDialog exToast = new EasyToastDialog(context);
-        exToast.setText(text);
-        exToast.mDuration = duration;
-        return exToast;
-    }
-
-    public static EasyToastDialog makeText(Context context, int resId, int duration) throws Resources.NotFoundException {
-        return makeText(context, context.getResources().getText(resId), duration);
-    }
-
-    private EasyToastDialog(Context context) {
-        this.mContext = context;
-        if (toast == null) {
-            toast = new Toast(mContext);
-        }
-        mView = View.inflate(mContext, R.layout.easy_dialog_layout, null);
-        mView.setOnTouchListener(this);
-        mView.setOnKeyListener(this);
-        visualLayout = (LinearLayout) mView.findViewById(R.id.visualLayout);
-    }
-
     private Runnable hideRunnable = new Runnable() {
         @Override
         public void run() {
@@ -74,111 +65,14 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
         }
     };
 
-    public void show() {
-        if (isShow) return;
-        TextView messageTV = (TextView) mView.findViewById(R.id.messageTV);
-        messageTV.setText(mText);
-        toast.setView(mView);
-        mView.findViewById(R.id.mButtonPositive).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyToast.showToast("点击升级");
-            }
-        });
-        mView.findViewById(R.id.mButtonNegative).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyToast.showToast("点击取消");
-            }
-        });
-        initTN();
-        try {
-            show.invoke(mTN);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public EasyToastDialog(Context mContext) {
+        this.mContext = mContext;
+        if (toast == null) {
+            toast = new Toast(mContext);
         }
-        isShow = true;
-        if (mDuration > LENGTH_ALWAYS) {
-            handler.postDelayed(hideRunnable, mDuration * 1000);
-        }
-    }
-
-    public void hide() {
-        if (!isShow) return;
-        try {
-            mText = null;
-            mView = null;
-            hide.invoke(mTN);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        isShow = false;
-    }
-
-    public void setView(View view) {
-        toast.setView(view);
-    }
-
-    public View getView() {
-        return toast.getView();
-    }
-
-    /**
-     * @see #LENGTH_SHORT
-     * @see #LENGTH_LONG
-     * @see #LENGTH_ALWAYS
-     */
-    public void setDuration(int duration) {
-        mDuration = duration;
-    }
-
-    public int getDuration() {
-        return mDuration;
-    }
-
-    public void setMargin(float horizontalMargin, float verticalMargin) {
-        toast.setMargin(horizontalMargin, verticalMargin);
-    }
-
-    public float getHorizontalMargin() {
-        return toast.getHorizontalMargin();
-    }
-
-    public float getVerticalMargin() {
-        return toast.getVerticalMargin();
-    }
-
-    public void setGravity(int gravity, int xOffset, int yOffset) {
-        toast.setGravity(gravity, xOffset, yOffset);
-    }
-
-    public int getGravity() {
-        return toast.getGravity();
-    }
-
-    public int getXOffset() {
-        return toast.getXOffset();
-    }
-
-    public int getYOffset() {
-        return toast.getYOffset();
-    }
-
-    public void setText(int resId) {
-        setText(mContext.getText(resId));
-    }
-
-    public void setText(CharSequence textStr) {
-//        toast.setText(s);
-        this.mText = textStr;
-    }
-
-    public int getAnimations() {
-        return animations;
-    }
-
-    public void setAnimations(int animations) {
-        this.animations = animations;
+        mView = View.inflate(mContext, R.layout.easy_dialog_layout, null);
+        mView.setOnTouchListener(this);
+        visualLayout = (LinearLayout) mView.findViewById(R.id.visualLayout);
     }
 
     private void initTN() {
@@ -214,6 +108,110 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
         setGravity(Gravity.CENTER | Gravity.TOP, 0, 0);
     }
 
+    public void show() {
+        if (isShow) return;
+        TextView messageTV = (TextView) mView.findViewById(R.id.messageTV);
+        messageTV.setText(mMessageText);
+        toast.setView(mView);
+        mView.findViewById(R.id.mButtonPositive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyToast.showToast("点击升级");
+            }
+        });
+        mView.findViewById(R.id.mButtonNegative).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyToast.showToast("点击取消");
+            }
+        });
+        initTN();
+        try {
+            show.invoke(mTN);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        isShow = true;
+        if (mDuration > LENGTH_ALWAYS) {
+            handler.postDelayed(hideRunnable, mDuration * 1000);
+        }
+    }
+
+    public void hide() {
+        if (!isShow) return;
+        try {
+            mMessageText = null;
+            mView = null;
+            hide.invoke(mTN);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        isShow = false;
+    }
+
+    public EasyToastDialog setCancelable(boolean cancelable) {
+        this.isCancelable = cancelable;
+        return this;
+    }
+
+    public EasyToastDialog setCanceledOnTouchOutside(boolean canceledOnTouchOutside) {
+        isCanceledOnTouchOutside = canceledOnTouchOutside;
+        return this;
+    }
+
+    public EasyToastDialog setTitle(CharSequence title) {
+        this.mTitleText = title;
+        return this;
+    }
+
+    public EasyToastDialog setMessage(int resId) {
+        setMessage(mContext.getText(resId));
+        return this;
+    }
+
+    public EasyToastDialog setMessage(CharSequence mMessageText) {
+        this.mMessageText = mMessageText;
+        return this;
+    }
+
+    public EasyToastDialog setPositive(CharSequence mPositiveText, View.OnClickListener listener) {
+        this.mPositiveText = mPositiveText;
+        this.positiveListener = listener;
+        return this;
+    }
+
+    public EasyToastDialog setNegative(CharSequence mNegativeText, View.OnClickListener listener) {
+        this.mNegativeText = mNegativeText;
+        this.negativeListener = listener;
+        return this;
+    }
+
+    public EasyToastDialog setNeutral(CharSequence mNeutralText, View.OnClickListener listener) {
+        this.mNeutralText = mNeutralText;
+        this.neutralListener = listener;
+        return this;
+    }
+
+    /**
+     * @see #LENGTH_SHORT
+     * @see #LENGTH_LONG
+     * @see #LENGTH_ALWAYS
+     */
+    public EasyToastDialog setDuration(int duration) {
+        mDuration = duration;
+        return this;
+    }
+
+    public EasyToastDialog setGravity(int gravity, int xOffset, int yOffset) {
+        toast.setGravity(gravity, xOffset, yOffset);
+        return this;
+    }
+
+//    public EasyToastDialog setAnimations(int animations) {
+//        this.animations = animations;
+//        return this;
+//    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
@@ -241,22 +239,6 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
                 break;
         }
         return true;
-//        return false;
     }
 
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-//        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//            hide();
-//            return true;
-//        }
-//        switch (event.getAction()) {
-//            case KeyEvent.ACTION_DOWN:
-//                break;
-//            case KeyEvent.ACTION_UP:
-//                hide();
-//                break;
-//        }
-        return false;
-    }
 }

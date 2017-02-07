@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">EasyAndroidUpgradeLibrary</string>
+    <string name="package_name_is_different_label">升级包与当前APP包名不同</string>
+    <string name="is_latest_version_label">当前已是最新版本</string>
+
+    <string name="dialog_title_default">升级提醒</string>
+    <string name="dialog_btn_label_cancel">取消</string>
+    <string name="dialog_btn_label_confirm">确定</string>
+    <string name="dialog_btn_label_upgrade">升级</string>
+    <string name="dialog_btn_label_talk_later">以后再说</string>
+    <string name="dialog_btn_label_background_upgrade">后台升级</string>
+
 </resources>

@@ -1,14 +1,13 @@
 package com.lijunhuayc.upgrade;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.lijunhuayc.downloader.downloader.DownloadProgressListener;
 import com.lijunhuayc.downloader.downloader.DownloaderConfig;
@@ -20,6 +19,7 @@ import com.lijunhuayc.upgrade.model.UpgradeInfoResult;
 import com.lijunhuayc.upgrade.network.HttpUtils;
 import com.lijunhuayc.upgrade.utils.MyToast;
 import com.lijunhuayc.upgrade.utils.SharedPreferencesUtils;
+import com.lijunhuayc.upgrade.view.EasyToastDialog;
 
 import static com.lijunhuayc.upgrade.model.UpgradeInfoModel.ForceLevel.ABSOLUTE_FORCE;
 import static com.lijunhuayc.upgrade.model.UpgradeInfoModel.ForceLevel.HALF_FORCE;
@@ -37,6 +37,7 @@ public class UpgradeHelper {
     private boolean isAutoStartInstall;
     private boolean isQuietDownload;
     private boolean isCheckPackageName;
+    private boolean isAboutChecking;
     private long delay;
     private LocalAppInfo localAppInfo;
 
@@ -46,6 +47,7 @@ public class UpgradeHelper {
         this.isAutoStartInstall = builder.isAutoStartInstall;
         this.isQuietDownload = builder.isQuietDownload;
         this.isCheckPackageName = builder.isCheckPackageName;
+        this.isAboutChecking = builder.isAboutChecking;
         this.delay = builder.delay;
         this.localAppInfo = readAppInfo(mContext);
         MyToast.init(mContext);
@@ -86,62 +88,86 @@ public class UpgradeHelper {
         if (isCheckPackageName) {
             if (!upgradeInfoModel.getPackageName().equals(localAppInfo.getPackageName())) {
                 //enable set callback notify coder and coder can dispose callback notify server or not.
-                MyToast.showToast("升级包与当前APP包名不同");
+                MyToast.showToast(mContext.getString(R.string.package_name_is_different_label));
                 return;
             }
         }
         if (upgradeInfoModel.getVersionCode() > localAppInfo.getVersionCode()) {
             showUpgradeAlertDialog(upgradeInfoModel);
-        } else {
-            //TODO ... if is about check upgrade, prompt than it's the latest version.
+        } else if (isAboutChecking) {
+            //TO-DO ... if is "about" check upgrade, prompt than it's the latest version.
+            MyToast.showToast(mContext.getString(R.string.is_latest_version_label));
         }
+    }
+
+    private CharSequence getString(int resId) {
+        return mContext.getResources().getString(resId);
     }
 
     private void showUpgradeAlertDialog(final UpgradeInfoModel upgradeInfoModel) {
         switch (upgradeInfoModel.getIsForce()) {
-            case NOT_FORCE:
+            case NOT_FORCE://Dialog box can cancel when touch the outside.
+                //not force upgrade & whether quiet download.
+                startDownload(upgradeInfoModel, isQuietDownload);
                 if (isQuietDownload) {
-                    //not force upgrade & is quiet download.
-                    startDownload(upgradeInfoModel, true);
                 } else {
-
                 }
                 break;
-            case HALF_FORCE:
+            case HALF_FORCE://Dialog box can click button cancel.
+                EasyToastDialog exToast = new EasyToastDialog(mContext);
+                exToast.setTitle(getString(R.string.dialog_title_default))
+                        .setMessage(upgradeInfoModel.getUpgradeNotes())
+                        .setDuration(EasyToastDialog.LENGTH_ALWAYS)
+                        .setCanceledOnTouchOutside(false)
+                        .setPositive(getString(R.string.dialog_btn_label_upgrade), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        })
+                        .setNegative(getString(R.string.dialog_btn_label_cancel), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        })
+                        .show();
                 break;
-            case ABSOLUTE_FORCE:
+            case ABSOLUTE_FORCE://Dialog box can never cancel.
                 SharedPreferencesUtils.setInt("", upgradeInfoModel.getIsForce());
+                //TODO ... 强制升级只能在前端升级
 
                 break;
 
         }
+//        EasyToastDialog.makeText(mContext, "您有新的升级\n您有新的升级\n您有新的升级\n您有新的升级", EasyToastDialog.LENGTH_ALWAYS).show();
 
-        //todo...
-        AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
-        if (TextUtils.isEmpty(upgradeInfoModel.getUpgradeTitle())) {
-            alertDialog.setTitle("升级提醒");
-        } else {
-            alertDialog.setTitle(upgradeInfoModel.getUpgradeTitle());
-        }
-        alertDialog.setMessage(upgradeInfoModel.getUpgradeNotes());
-        alertDialog.setCanceledOnTouchOutside(false);
-        alertDialog.setCancelable(upgradeInfoModel.getIsForce() == NOT_FORCE);
-        if (upgradeInfoModel.getIsForce() == NOT_FORCE) {
-            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "下次再说", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    LogUtils.d(TAG, "cancel upgrade.");
-                }
-            });
-        }
-        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "马上升级", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startDownload(upgradeInfoModel, false);
-                dialog.cancel();
-            }
-        });
-        alertDialog.show();
+//        //todo...
+//        AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+//        if (TextUtils.isEmpty(upgradeInfoModel.getUpgradeTitle())) {
+//            alertDialog.setTitle("升级提醒");
+//        } else {
+//            alertDialog.setTitle(upgradeInfoModel.getUpgradeTitle());
+//        }
+//        alertDialog.setMessage(upgradeInfoModel.getUpgradeNotes());
+//        alertDialog.setCanceledOnTouchOutside(false);
+//        alertDialog.setCancelable(upgradeInfoModel.getIsForce() == NOT_FORCE);
+//        if (upgradeInfoModel.getIsForce() == NOT_FORCE) {
+//            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "下次再说", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    LogUtils.d(TAG, "cancel upgrade.");
+//                }
+//            });
+//        }
+//        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "马上升级", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                startDownload(upgradeInfoModel, false);
+//                dialog.cancel();
+//            }
+//        });
+//        alertDialog.show();
     }
 
     private void startDownload(UpgradeInfoModel upgradeInfoModel, boolean isQuietDownload) {
@@ -214,8 +240,9 @@ public class UpgradeHelper {
         private String upgradeUrl;                      //upgrade check remote-interface.
         private boolean isAutoStartInstall = false;
         private boolean isQuietDownload = false;        //whether quiet download when the update is detected.
-        private boolean isCheckPackageName = true;     //whether check the package name.
-        private long delay = 0;                          //millisecond. whether delay check upgrade.
+        private boolean isCheckPackageName = true;      //whether check the package name.
+        private boolean isAboutChecking = false;        //whether is "about" check upgrade.
+        private long delay = 0;                         //millisecond. whether delay check upgrade.
 
         public Builder(Context mContext) {
             this.mContext = mContext.getApplicationContext();

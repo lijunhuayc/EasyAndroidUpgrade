@@ -44,7 +44,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:text="升级"
+                android:text="@string/dialog_title_default"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -71,7 +71,6 @@
                         android:id="@+id/messageTV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="测试多行文本\n测试多行文本\n测试多行文本"
                         android:textColor="#ff313131"
                         android:textSize="16sp"
                         android:visibility="visible"
@@ -79,7 +78,7 @@
                         tools:visibility="visible" />
 
                     <ProgressBar
-                        android:id="@+id/progress"
+                        android:id="@+id/progressBar"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="15dp"
@@ -88,7 +87,7 @@
                         android:progressBackgroundTint="@color/colorAccent"
                         android:secondaryProgress="96"
                         android:visibility="gone"
-                        tools:visibility="gone" />
+                        tools:visibility="visible" />
                 </RelativeLayout>
             </ScrollView>
         </LinearLayout>
@@ -125,7 +124,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:singleLine="true"
-                android:text="升级"
+                android:text="@string/dialog_btn_label_upgrade"
                 android:textColor="@color/dialogBtnColor"
                 android:textSize="16sp" />
 
@@ -141,7 +140,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:singleLine="true"
-                android:text="取消"
+                android:text="@string/dialog_btn_label_cancel"
                 android:textColor="@color/dialogBtnColor"
                 android:textSize="16sp" />
 
@@ -155,7 +154,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:singleLine="true"
-                android:text="中立"
+                android:text="@string/dialog_btn_label_talk_later"
                 android:textColor="@color/dialogBtnColor"
                 android:textSize="16sp"
                 android:visibility="gone" />

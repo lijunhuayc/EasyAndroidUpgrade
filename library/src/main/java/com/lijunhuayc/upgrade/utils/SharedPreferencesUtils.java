@@ -3,7 +3,6 @@ package com.lijunhuayc.upgrade.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 /**
  * Desc:
@@ -11,8 +10,8 @@ import android.util.Log;
  * Email: lijunhuayc@sina.com
  */
 public class SharedPreferencesUtils {
-    public static final int DATA_SET = 0;
-    public static final int DATA_GET = 1;
+//    public static final int DATA_SET = 0;
+//    public static final int DATA_GET = 1;
     private static SharedPreferences mSharedPreferences = null;
 
     public static void init(Context mContext) {
@@ -23,21 +22,22 @@ public class SharedPreferencesUtils {
 
     // 保存或写入数据
     synchronized public static String refreshData(int Type, String key, String value) {
-        if (mSharedPreferences == null) {
-            Log.i("SharedPreferencesUtils", "mSharedPreferences is null!");
-            return null;
-        }
-        String sValue = null;
-        if (Type == DATA_SET) {
-            if ((key != null) && (value != null)) {
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                editor.putString(key, value);
-                editor.apply();
-            }
-        } else if (Type == DATA_GET && (key != null)) {
-            sValue = mSharedPreferences.getString(key, value);
-        }
-        return sValue;
+//        if (mSharedPreferences == null) {
+//            Log.i("SharedPreferencesUtils", "mSharedPreferences is null!");
+//            return null;
+//        }
+//        String sValue = null;
+//        if (Type == DATA_SET) {
+//            if ((key != null) && (value != null)) {
+//                SharedPreferences.Editor editor = mSharedPreferences.edit();
+//                editor.putString(key, value);
+//                editor.apply();
+//            }
+//        } else if (Type == DATA_GET && (key != null)) {
+//            sValue = mSharedPreferences.getString(key, value);
+//        }
+//        return sValue;
+        return null;
     }
 
     synchronized public static boolean setString(String key, String value) {

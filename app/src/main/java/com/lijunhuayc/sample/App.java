@@ -15,5 +15,11 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         MyToast.init(this);
+
+//        new UpgradeHelper.Builder(this)
+//                .setUpgradeUrl("http://192.168.1.79/public/upgrade.html?version=3")
+//                .setDelay(3000)
+//                .build().check();
+
     }
 }
