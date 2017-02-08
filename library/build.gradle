@@ -32,7 +32,7 @@ publish {
     userOrg = 'lijunhua'//bintray.com用户名
     groupId = 'com.lijunhuayc.upgrade'//jcenter上的路径
     artifactId = 'easyupgrade'//项目名称
-    publishVersion = '1.0.1'//版本号
+    publishVersion = '1.0.2'//版本号
     desc = 'Oh hi, this is a nice description for a project, right?'
     website = 'https://github.com/lijunhuayc/EasyAndroidUpgrade'
     licences = ['Apache-2.0']

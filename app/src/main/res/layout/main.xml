@@ -13,54 +13,6 @@
     <EditText
         android:id="@+id/path"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="http://www.winrar.com.cn/download/wrar380sc.exe"></EditText>
+        android:layout_height="wrap_content" />
 
-    <!-- 下载按钮 -->
-    <TextView
-        android:id="@+id/startBt"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:background="@drawable/common_item_drawable"
-        android:gravity="center"
-        android:text="开始"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/pauseBt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:background="@drawable/common_item_drawable"
-        android:text="暂停"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/continueBt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:text="继续"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/stopBt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:text="停止"
-        android:visibility="gone" />
-
-    <!-- 进度条 -->
-    <ProgressBar
-        android:id="@+id/downloadbar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="20dip" />
-
-    <TextView
-        android:id="@+id/resultView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center" />
 </LinearLayout>

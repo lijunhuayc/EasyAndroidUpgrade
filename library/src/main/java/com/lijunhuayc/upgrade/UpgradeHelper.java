@@ -158,7 +158,7 @@ public class UpgradeHelper {
                                 startDownload(upgradeInfoModel, isQuietDownload);
                             }
                         })
-                        .setNegative(getString(R.string.dialog_btn_label_talk_later), new View.OnClickListener() {
+                        .setNeutral(getString(R.string.dialog_btn_label_talk_later), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 exToast.hide();
@@ -229,7 +229,7 @@ public class UpgradeHelper {
 //        alertDialog.show();
     }
 
-    private void startDownload(final UpgradeInfoModel upgradeInfoModel, boolean isQuietDownload) {
+    private void startDownload(final UpgradeInfoModel upgradeInfoModel, final boolean isQuietDownload) {
         final EasyToastDialog exToast = new EasyToastDialog(mContext)
                 .setTitle(getString(R.string.dialog_title_download))
                 .setDuration(EasyToastDialog.LENGTH_ALWAYS)
@@ -237,12 +237,16 @@ public class UpgradeHelper {
         String fileName = upgradeInfoModel.getAppName() + "_" + upgradeInfoModel.getVersionName() + ".apk";
         File saveFile = mContext.getExternalFilesDir("");
         File apkFile = new File(saveFile, fileName);
-        // TODO: 2017/02/08  检测apk是否已经下载版本是否正确文件是否完整
-        // TODO: ...  否则重新下载
+        if (apkFile.exists()) {
+            if (upgradeInfoModel.getMd5().equals(MD5Utils.MD5EncodeFile(apkFile))) {
+                installAPK(apkFile);
+                return;
+            }
+        }
         final DownloaderConfig config = new DownloaderConfig()
                 .setDownloadUrl(upgradeInfoModel.getApkUrl())
                 .setThreadNum(3)
-                .setSaveDir(saveFile)//saveDir = /data/data/packagename/files
+                .setSaveDir(saveFile)//saveDir = /storage/emulated/0/Android/data/com.echi.future/files
                 .setFileName(fileName)
                 .setDownloadListener(new DownloadProgressListener() {
                     @Override
@@ -264,12 +268,39 @@ public class UpgradeHelper {
                     @Override
                     public void onDownloadSuccess(String apkPath) {
                         exToast.hide();
-                        installAPK(upgradeInfoModel, apkPath);
+
+                        File apkFile = new File(apkPath);
+                        LogUtils.d(TAG, "apkPath = " + apkPath);
+                        LogUtils.d(TAG, "apkSize = " + apkFile.length());
+                        LogUtils.d(TAG, "apkMD5 = " + MD5Utils.MD5EncodeFile(apkFile));
+                        if (upgradeInfoModel.getMd5().equals(MD5Utils.MD5EncodeFile(apkFile))) {
+                            installAPK(apkFile);
+                        } else {
+                            MyToast.showToast(getString(R.string.upgrade_info_exception).toString());
+                        }
                     }
 
                     @Override
                     public void onDownloadFailed() {
-                        // TODO: 2017/02/08   提示重新下载
+                        exToast.hide();
+                        final EasyToastDialog alertToast = new EasyToastDialog(mContext)
+                                .setMode(EasyToastDialog.MODE_MESSAGE)
+                                .setTitle(getString(R.string.dialog_title_alert))
+                                .setMessage(getString(R.string.upgrade_download_exception))
+                                .setDuration(EasyToastDialog.LENGTH_ALWAYS);
+                        alertToast.setPositive(getString(R.string.dialog_btn_label_re_download), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertToast.hide();
+                                startDownload(upgradeInfoModel, isQuietDownload);
+                            }
+                        }).setNeutral(getString(R.string.dialog_btn_label_cancel), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertToast.hide();
+                            }
+                        });
+                        alertToast.show();
                     }
 
                     @Override
@@ -299,18 +330,11 @@ public class UpgradeHelper {
         wolfDownloader.startDownload();
     }
 
-    private void installAPK(UpgradeInfoModel model, String apkPath) {
-        File apkFile = new File(apkPath);
-        if (model.getMd5().equals(MD5Utils.getFileMD5(apkFile))) {
-            LogUtils.d(TAG, "apkPath = " + apkPath);
-            LogUtils.d(TAG, "apkSize = " + apkFile.length());
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(intent);
-        } else {
-            MyToast.showToast(getString(R.string.upgrade_info_exception).toString());
-        }
+    private void installAPK(File apkFile) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
     }
 
     private CharSequence getString(@StringRes int resId) {
@@ -343,7 +367,7 @@ public class UpgradeHelper {
         private static final String TAG = Builder.class.getSimpleName();
         private Context mContext;
         private String upgradeUrl;                      //upgrade check remote-interface.
-        private boolean isAutoStartInstall = false;
+        private boolean isAutoStartInstall = true;
         private boolean isQuietDownload = false;        //whether quiet download when the update is detected.
         private boolean isCheckPackageName = true;      //whether check the package name.
         private boolean isAboutChecking = false;        //whether is "about" check upgrade.
@@ -355,7 +379,7 @@ public class UpgradeHelper {
         }
 
         public Builder setUpgradeUrl(String upgradeUrl) {
-            LogUtils.e(TAG, "upgradeUrl = " + upgradeUrl);
+            LogUtils.d(TAG, "upgradeUrl = " + upgradeUrl);
             if (TextUtils.isEmpty(upgradeUrl)) {
                 throw new IllegalArgumentException("The URL is invalid.");
             }
@@ -364,7 +388,7 @@ public class UpgradeHelper {
         }
 
         public Builder setAutoStartInstall(boolean autoStartInstall) {
-            LogUtils.e(TAG, "autoStartInstall = " + autoStartInstall);
+            LogUtils.d(TAG, "autoStartInstall = " + autoStartInstall);
             isAutoStartInstall = autoStartInstall;
             return this;
         }
@@ -378,6 +402,11 @@ public class UpgradeHelper {
         public Builder setCheckPackageName(boolean checkPackageName) {
             LogUtils.e(TAG, "checkPackageName = " + checkPackageName);
             isCheckPackageName = checkPackageName;
+            return this;
+        }
+
+        public Builder setIsAboutChecking(boolean aboutChecking) {
+            isAboutChecking = aboutChecking;
             return this;
         }
 

@@ -2,6 +2,7 @@ package com.lijunhuayc.upgrade.view;
 
 import android.content.Context;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -142,8 +143,11 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
         mButtonPositive.setOnClickListener(mPositiveListener);
         mButtonNegative.setText(mNegativeText);
         mButtonNegative.setOnClickListener(mNegativeListener);
-        mButtonNeutral.setText(mNeutralText);
-        mButtonNeutral.setOnClickListener(mNeutralListener);
+        if (!TextUtils.isEmpty(mNeutralText)) {
+            mButtonNeutral.setText(mNeutralText);
+            mButtonNeutral.setOnClickListener(mNeutralListener);
+            mButtonNeutral.setVisibility(View.VISIBLE);
+        }
 
         initTN();
         try {
