@@ -60,8 +60,7 @@
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:overScrollMode="ifContentScrolls"
-                android:padding="12dp">
+                android:overScrollMode="ifContentScrolls">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -71,23 +70,66 @@
                         android:id="@+id/messageTV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="8dp"
                         android:textColor="#ff313131"
                         android:textSize="16sp"
                         android:visibility="visible"
                         tools:text="测试多行文本\n测试多行文本\n测试多行文本"
-                        tools:visibility="visible" />
+                        tools:visibility="gone" />
 
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    <LinearLayout
+                        android:id="@+id/progressLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="15dp"
-                        android:max="100"
-                        android:progress="45"
-                        android:progressBackgroundTint="@color/colorAccent"
-                        android:secondaryProgress="96"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
                         android:visibility="gone"
-                        tools:visibility="visible" />
+                        tools:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/percentLabelTV"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:gravity="right"
+                            android:textColor="@color/textColorPrimary"
+                            android:textSize="12sp"
+                            tools:text="54%" />
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:progressDrawable="@drawable/progress_drawable"
+                            tools:max="100"
+                            tools:progress="100"
+                            tools:secondaryProgress="45"
+                            tools:visibility="visible" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/sizeLabelTV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:textColor="@color/textColorPrimary"
+                                android:textSize="12sp"
+                                tools:text="10.21MB / 22.3MB " />
+
+                            <TextView
+                                android:id="@+id/speedLabelTV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginTop="8dp"
+                                android:textColor="@color/textColorPrimary"
+                                android:textSize="12sp"
+                                tools:text="1.02 MB/s" />
+                        </RelativeLayout>
+                    </LinearLayout>
                 </RelativeLayout>
             </ScrollView>
         </LinearLayout>
@@ -111,7 +153,8 @@
         <RelativeLayout
             android:id="@+id/buttonLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            tools:visibility="gone">
 
             <TextView
                 android:id="@+id/mButtonPositive"

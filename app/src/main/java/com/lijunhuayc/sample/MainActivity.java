@@ -54,7 +54,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void init() {
         new UpgradeHelper.Builder(this)
                 .setUpgradeUrl("http://192.168.1.79/public/upgrade.html?version=3")
-                .setDelay(3000)
+                .setDelay(1000)
                 .build().check();
     }
 

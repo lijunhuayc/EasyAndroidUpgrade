@@ -10,34 +10,14 @@ import android.preference.PreferenceManager;
  * Email: lijunhuayc@sina.com
  */
 public class SharedPreferencesUtils {
-//    public static final int DATA_SET = 0;
-//    public static final int DATA_GET = 1;
+//    public static final String UPGRADE_TAG_KEY = "UPGRADE_TAG_KEY";
+//    public static final String UPGRADE_INFO_KEY = "UPGRADE_INFO_KEY";
     private static SharedPreferences mSharedPreferences = null;
 
     public static void init(Context mContext) {
         if (mSharedPreferences == null) {
             mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         }
-    }
-
-    // 保存或写入数据
-    synchronized public static String refreshData(int Type, String key, String value) {
-//        if (mSharedPreferences == null) {
-//            Log.i("SharedPreferencesUtils", "mSharedPreferences is null!");
-//            return null;
-//        }
-//        String sValue = null;
-//        if (Type == DATA_SET) {
-//            if ((key != null) && (value != null)) {
-//                SharedPreferences.Editor editor = mSharedPreferences.edit();
-//                editor.putString(key, value);
-//                editor.apply();
-//            }
-//        } else if (Type == DATA_GET && (key != null)) {
-//            sValue = mSharedPreferences.getString(key, value);
-//        }
-//        return sValue;
-        return null;
     }
 
     synchronized public static boolean setString(String key, String value) {
