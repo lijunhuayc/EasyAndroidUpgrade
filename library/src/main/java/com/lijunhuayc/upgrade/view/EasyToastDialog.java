@@ -124,7 +124,7 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
                 params.windowAnimations = animations;
             }
 
-            //调用tn.show()之前一定要先设置 mNextView
+            //must set 'mNextView'befor call tn.show()
             Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
             tnNextViewField.setAccessible(true);
             tnNextViewField.set(mTN, mToast.getView());
@@ -294,6 +294,8 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
      * @see #LENGTH_SHORT
      * @see #LENGTH_LONG
      * @see #LENGTH_ALWAYS
+     * @param duration duration
+     * @return this
      */
     public EasyToastDialog setDuration(int duration) {
         mDuration = duration;

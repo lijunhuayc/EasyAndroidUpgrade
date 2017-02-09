@@ -57,9 +57,6 @@ public class MyToast {
         showToast(text, duration, Gravity.BOTTOM);
     }
 
-    /**
-     * Toast统一管理类
-     */
     private MyToast() {
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
