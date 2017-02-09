@@ -3,7 +3,8 @@ EasyAndroidUpgrade
 
 ##EasyAndroidUpgrade支持的功能
 1. 一行代码搞定android应用内部升级。
-##EasyAndroidUpgrade用法及原理
+
+###EasyAndroidUpgrade用法及原理
 
 ```    
 new UpgradeHelper.Builder(this)
