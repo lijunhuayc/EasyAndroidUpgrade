@@ -5,8 +5,7 @@ EasyAndroidUpgrade
 1. 一行代码搞定android应用内部升级。
 ##EasyAndroidUpgrade用法及原理
 
-
-```java    new UpgradeHelper.Builder(this)
+```    new UpgradeHelper.Builder(this)
                .setUpgradeUrl("http://192.168.1.79/public/upgrade.html?version=3")
                .setDelay(1000)
                .setIsAboutChecking(true)//关于页面手动检测更新需要设置isAboutChecking(true), 启动时检测设为false
@@ -15,7 +14,7 @@ EasyAndroidUpgrade
 链式调用方式设置升级参数，框架内部检测到升级后会启动一个Dialog样式Activity来提示用户进行升级，升级时用户可以等待App下载完成也可以选择后台静默下载，下载过程中用户可以暂停或者取消下载从而终止升级，下载完成后会根据配置检测包名是否一直，文件MD5值是否一致，检测完成后会根据配置决定直接弹出App安装界面还是Notification通知用户已下载完成。
 
 ###配置参数解释
-```java
+```
 public class UpgradeConfig implements Parcelable {
     private String upgradeUrl;                      //upgrade check remote-interface.
     private boolean isAutoStartInstall = true;
@@ -34,9 +33,6 @@ isCheckPackageName      下载玩APP是否检测App包名一致（通常必须�
 isAboutChecking         “关于”页面中用户手动检测升级需要设置此参数
 delay                   启动检测时可以设置延迟请求时间，避开启动时大批量接口请求数据。
 </pre>
-
-###资源管理
-
 
 
 ## License
