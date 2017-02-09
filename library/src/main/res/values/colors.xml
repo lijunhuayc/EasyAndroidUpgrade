@@ -7,5 +7,6 @@
     <color name="colorAccent">#376065</color>
     <color name="textColorPrimary">#525B6D</color>
 
-    <color name="dialogBtnColor">#218868</color>
+    <color name="dialogBtnColor">#ff009688</color>
+
 </resources>

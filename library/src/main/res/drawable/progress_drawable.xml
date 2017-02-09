@@ -11,7 +11,7 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <solid android:color="#efefef" />
+                <solid android:color="@color/dialogBtnColor" />
                 <size android:height="2dp" />
             </shape>
         </clip>

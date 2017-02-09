@@ -1,4 +1,4 @@
-package com.lijunhuayc.upgrade;
+package com.lijunhuayc.upgrade.helper;
 
 /**
  * Desc:

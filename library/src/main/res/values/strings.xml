@@ -8,11 +8,16 @@
     <string name="dialog_title_download">正在下载</string>
     <string name="dialog_btn_label_cancel">取消</string>
     <string name="dialog_btn_label_confirm">确定</string>
+    <string name="dialog_btn_label_pause">暂停</string>
+    <string name="dialog_btn_label_continue">继续</string>
+    <string name="dialog_btn_label_continue_download">继续下载</string>
+    <string name="dialog_btn_label_not_download">不想下载了</string>
     <string name="dialog_btn_label_upgrade">马上升级</string>
     <string name="dialog_btn_label_talk_later">以后再说</string>
     <string name="dialog_btn_label_background_upgrade">后台升级</string>
     <string name="dialog_btn_label_re_download">重新下载</string>
     <string name="upgrade_download_exception">APK文件下载失败</string>
     <string name="upgrade_info_exception">升级文件异常</string>
+    <string name="download_info_msg">确定取消下载？</string>
 
 </resources>

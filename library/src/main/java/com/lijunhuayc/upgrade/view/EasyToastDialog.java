@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
  * Desc:
  * Created by ${junhua.li} on 2016/11/02 15:32.
  * Email: lijunhuayc@sina.com
+ * @deprecated
  */
 public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener {
     private static final String TAG = EasyToastDialog.class.getSimpleName();
@@ -40,8 +41,8 @@ public class EasyToastDialog implements View.OnTouchListener, View.OnKeyListener
     private boolean isShow = false;
     private boolean isCancelable = false;
     private boolean isCanceledOnTouchOutside = false;
-
     private int mMode = MODE_MESSAGE;
+
     private Object mTN;
     private Method show;
     private Method hide;

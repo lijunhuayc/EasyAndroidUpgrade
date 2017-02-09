@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- 设置 v7 AlertDialog 样式 -->
+    </style>
+
+    <style name="Dialog.Button.Style" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@drawable/easy_dialog_btn_drawable</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/dialogBtnColor</item>
+        <item name="android:textSize">@dimen/dialog_button_text_size</item>
+    </style>
+</resources>

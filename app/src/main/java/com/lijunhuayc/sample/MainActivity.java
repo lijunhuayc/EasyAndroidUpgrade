@@ -11,7 +11,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.lijunhuayc.upgrade.UpgradeHelper;
+import com.lijunhuayc.upgrade.helper.UpgradeHelper;
 
 public class MainActivity extends FragmentActivity {
     private EditText downloadpathText;
