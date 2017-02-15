@@ -2,8 +2,8 @@
 .gradle
 .idea
 /local.properties
-#/.idea/workspace.xml
-#/.idea/libraries
 /build
 gradlew
 gradlew.bat
+gradle.properties
+

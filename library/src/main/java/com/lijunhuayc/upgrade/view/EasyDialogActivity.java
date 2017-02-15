@@ -215,7 +215,7 @@ public class EasyDialogActivity extends BaseActivity {
                         .setNeutralButton(getString(R.string.dialog_btn_label_not_download), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                wolfDownloader.stopDownload();
+                                wolfDownloader.exitDownload();
                                 downloadStatus = STOP;
                                 alertDialog.cancel();
                                 finish();
