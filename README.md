@@ -2,8 +2,7 @@ EasyAndroidUpgrade
 ================
 
 ##EasyAndroidUpgrade支持的功能
-1. 一行代码搞定android应用内部升级。
-
+1. 一行代码搞定android应用内部升级。（欢迎加QQ群讨论：127591825）
 ###EasyAndroidUpgrade用法及原理
 
 1、在你的 app module build.gradle 文件中添加如下依赖
