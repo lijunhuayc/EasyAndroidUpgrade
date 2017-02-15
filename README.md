@@ -6,7 +6,14 @@ EasyAndroidUpgrade
 
 ###EasyAndroidUpgrade用法及原理
 
-```    
+1、在你的 app module build.gradle 文件中添加如下依赖
+
+```
+compile 'com.lijunhuayc.upgrade:easyupgrade:1.0.4'
+```
+
+2、在application或者activity中添加如下代码使用APP升级功能
+```
 new UpgradeHelper.Builder(this)
        .setUpgradeUrl("http://192.168.1.79/public/upgrade.html?version=3")
        .setDelay(1000)
